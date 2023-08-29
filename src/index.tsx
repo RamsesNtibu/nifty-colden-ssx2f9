@@ -3,17 +3,13 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App
-      fullname={"Ntibushitse"}
-      username={""}
-      email={"gg"}
-      password={""}
-      confirmPassword={""}
-      acceptTerms={false}
-    />
+    <QueryClientProvider client={new QueryClient()}>
+      <App />
+    </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

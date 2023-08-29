@@ -2,6 +2,7 @@ import "./App.css";
 import React from "react";
 import { useMemo } from "react";
 import { useForm, FormProvider } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormField from "./components/FormField";
 import * as Yup from "yup";
@@ -15,25 +16,38 @@ interface UserSubmitForm {
   acceptTerms: boolean;
 }
 
-const App: React.FC<UserSubmitForm> = (defaultValue: UserSubmitForm) => {
+const App: React.FC = () => {
   const validationSchema = Yup.object().shape({
     fullname: Yup.string().required(),
     username: Yup.string().required().min(6).max(20),
     email: Yup.string().required().email(),
-    password: Yup.string()
-      .required("Password is required")
-      .min(6, "Password must be at least 6 characters")
-      .max(40, "Password must not exceed 40 characters"),
+    password: Yup.string().required().min(6).max(40),
     confirmPassword: Yup.string()
-      .required("Confirm Password is required")
+      .required()
       .oneOf([Yup.ref("password"), null], "Confirm Password does not match"),
-    acceptTerms: Yup.bool().oneOf([true], "Accept Terms is required")
+    acceptTerms: Yup.bool().oneOf([true], "Accept Terms is required"),
   });
+
+  const { data } = useQuery(["userTable"], (): UserSubmitForm => {
+    const defaultVal: UserSubmitForm = {
+      fullname: "ramses",
+      username: "sesmar",
+      email: "rr@rr.rr",
+      password: "",
+      confirmPassword: "",
+      acceptTerms: false,
+    };
+    methods.reset(defaultVal);
+    return defaultVal;
+  });
+
   const methods = useForm<UserSubmitForm>({
     resolver: yupResolver(validationSchema),
     defaultValues: useMemo(() => {
-      return defaultValue;
-    }, [defaultValue])
+      if (data) {
+        return data;
+      }
+    }, [data]),
   });
 
   const onSubmit = (data: UserSubmitForm) => {

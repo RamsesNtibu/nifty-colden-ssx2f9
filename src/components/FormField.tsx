@@ -23,6 +23,7 @@ const FormInput: React.FC<IFormFieldProps> = ({
       <label htmlFor={id}>{labelText}</label>
       <div className="mt-spacing-0.5 sm:mt-0 sm:col-span-2">
         <Controller
+          defaultValue={""}
           name={id}
           control={control}
           render={({ field }) => (
