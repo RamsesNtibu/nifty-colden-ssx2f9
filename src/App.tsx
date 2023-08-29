@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormField from "./components/FormField";
 import * as Yup from "yup";
+import dataServices from "./services/dataServices"
 
 interface UserSubmitForm {
   fullname: string;
@@ -29,14 +30,7 @@ const App: React.FC = () => {
   });
 
   const { data } = useQuery(["userTable"], (): UserSubmitForm => {
-    const defaultVal: UserSubmitForm = {
-      fullname: "ramses",
-      username: "sesmar",
-      email: "rr@rr.rr",
-      password: "",
-      confirmPassword: "",
-      acceptTerms: false,
-    };
+    const defaultVal: UserSubmitForm = dataServices.getData() as UserSubmitForm;
     methods.reset(defaultVal);
     return defaultVal;
   });
