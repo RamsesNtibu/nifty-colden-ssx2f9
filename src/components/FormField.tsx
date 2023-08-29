@@ -1,5 +1,5 @@
 import React from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 interface IFormFieldProps {
   labelText: string;
@@ -12,23 +12,27 @@ const FormInput: React.FC<IFormFieldProps> = ({
   labelText,
   id,
   type,
-  placeholder
+  placeholder,
 }) => {
   const {
-    register,
-    formState: { errors }
+    control,
+    formState: { errors },
   } = useFormContext();
   return (
     <div className="form-group">
       <label htmlFor={id}>{labelText}</label>
       <div className="mt-spacing-0.5 sm:mt-0 sm:col-span-2">
-        <input
-          {...register(id)}
-          id={id}
+        <Controller
           name={id}
-          type={type}
-          placeholder={placeholder}
-          className={`form-control ${errors[id] ? "is-invalid" : ""}`}
+          control={control}
+          render={({ field }) => (
+            <input
+              {...field}
+              type={type}
+              placeholder={placeholder}
+              className={`form-control ${errors[id] ? "is-invalid" : ""}`}
+            />
+          )}
         />
         <div className="invalid-feedback">{errors[id]?.message}</div>
       </div>
@@ -40,11 +44,11 @@ const FormCheckbox: React.FC<IFormFieldProps> = ({
   labelText,
   id,
   type,
-  placeholder
+  placeholder,
 }) => {
   const {
     register,
-    formState: { errors }
+    formState: { errors },
   } = useFormContext();
   return (
     <div className="form-group">
@@ -68,7 +72,7 @@ const FormCheckbox: React.FC<IFormFieldProps> = ({
 
 const FormField = {
   FormInput,
-  FormCheckbox
+  FormCheckbox,
 };
 
 export default FormField;
